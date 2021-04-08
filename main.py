@@ -4,6 +4,8 @@
 # Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
 import time
 from w1thermsensor import W1ThermSensor
+from datetime import datetime
+import csv
 
 
 def print_hi(name):
@@ -30,6 +32,7 @@ def initialize(self):
 def volt_to_celsius(self, vin):
 
 
+
 #function to read voltage uses volt to celsius function and returns temp in celsius
 def read_voltage(self, voltage):
     #supposed to mimic reading from resistance temp but we included voltage parameter to get a value
@@ -48,5 +51,21 @@ def send_below_critical_alert(self, temp):
 
 #Write down into log (txt) file
 def log(self, temp):
+    f = open("data.csv", "a")
+    now = datetime.now()
+    is_critical = "N"
+
+    if -80 > temp > -60:
+        is_critical = "Y"
+
+    # dd/mm/YY H:M:S
+    dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+
+    f.write(f'{dt_string},{temp},{is_critical}')
+    f.close()
+
+
+
+
 
 
