@@ -29,6 +29,7 @@ def initialize():
 
 
 # function to convert voltage to celsius
+#tolu
 def volt_to_celsius(vin):
     #return float(vin)
     return -70
@@ -42,6 +43,7 @@ def read_voltage():
 
 
 # function to send alert to console probably
+#tolu
 def send_initial_alert(temp):
     log(temp)
     print("WARNING: Storage unit is close to reaching critical temperature!, dry ice refill is required!")
@@ -62,12 +64,14 @@ def read_for_hour():
 
 
 # Send warning function
+#tolu
 def send_below_critical_alert(temp):
     log(temp)
     print("STORAGE UNIT IS BELOW CRITICAL TEMPERATURE! REFILL IS REQUIRED!")
 
 
 # Write down into log (txt) file
+#tolu
 def log(temp):
     f = open("data.csv", "a")
     now = datetime.now()
