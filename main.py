@@ -16,3 +16,32 @@ if __name__ == '__main__':
     print_hi('PyCharm')
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+#function to initialize temp
+def initialize(self):
+
+
+#function to convert voltage to celsius
+def volt_to_celsius(self):
+
+
+#function to read temp
+def read_temp(self):
+
+
+#function to send alert
+def send_initial_alert(self):
+
+
+#function to check temp
+def check_temp(self):
+
+
+#Send warning function
+def send_below_critical_alert(self):
+
+
+#Write down into log (txt) file
+def log(self, temp):
+
+
