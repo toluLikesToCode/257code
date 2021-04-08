@@ -30,14 +30,14 @@ def initialize():
 
 # function to convert voltage to celsius
 def volt_to_celsius(vin):
-    return float(vin)
+    #return float(vin)
+    return -70
 
 
 # function to read voltage uses volt to celsius function and returns temp in celsius
 def read_voltage():
     # supposed to mimic reading from resistance temp but we included voltage parameter to get a value
     temp_in_celsius = volt_to_celsius(voltage[1])
-    log(temp_in_celsius)
     return temp_in_celsius
 
 
@@ -73,13 +73,13 @@ def log(temp):
     now = datetime.now()
     is_critical = "N"
 
-    if -80 > temp > -60:
+    if temp >= -60 or temp <= -80:
         is_critical = "Y"
 
     # dd/mm/YY H:M:S
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
-    f.write(f'{dt_string},{temp},{is_critical}')
+    f.write(f'{dt_string} ,{temp},{is_critical}\n')
     f.close()
 
 
@@ -93,7 +93,7 @@ if __name__ == '__main__':
         if (critical_temp[0] >= temp >= critical_temp[0] - 3) or (temp <= critical_temp[1] + 3 and temp <= critical_temp[1]):
             send_initial_alert(temp)
             read_for_hour()
-        elif critical_temp[1] > temp > critical_temp[0]:
+        elif temp > critical_temp[0] or temp < critical_temp[1]:
             send_below_critical_alert(temp)
             read_for_hour()
         else:
