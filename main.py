@@ -30,8 +30,7 @@ def initialize():
     return temp
 #function to convert voltage to celsius
 def volt_to_celsius(vin):
-    num = 1
-
+    return 2.0
 
 
 #function to read voltage uses volt to celsius function and returns temp in celsius
@@ -47,11 +46,16 @@ def send_initial_alert(temp):
     print("WARNING: Storage unit is 3 degrees away from reaching critical temperature!, dry ice refill is required!")
 
 #function to read temp for an hour to check near critical temp
-def read_for_hour(temp):
+def read_for_hour():
+    alert_sent = False
     t = time.time()
     while t <= (t+3600):
         temp = read_voltage(voltage[1])
-        log(temp)
+        if (-80 > temp > -60) and not alert_sent:
+            send_below_critical_alert(temp)
+            alert_sent = True
+        else: 
+            log(temp)
         time.sleep(5*60)
 
     
@@ -82,7 +86,16 @@ if __name__ == '__main__':
     while power:
         temp = read_voltage(voltage[1])
 
-
+        if temp >= (critical_temp[0] - 3) or temp <= (critical_temp[1] + 3):
+            send_initial_alert(temp)
+            read_for_hour()
+        elif critical_temp[0] > temp > critical_temp[1]:
+            send_below_critical_alert(temp)
+            read_for_hour()
+        else:
+            log(temp)
+        time.sleep(3600)
+            
 
 
 
