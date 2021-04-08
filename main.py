@@ -31,14 +31,15 @@ def volt_to_celsius(self, vin):
 
 
 #function to read voltage uses volt to celsius function and returns temp in celsius
-def read_temp(self, voltage):
+def read_voltage(self, voltage):
     #supposed to mimic reading from resistance temp but we included voltage parameter to get a value
-    return volt_to_celsius(voltage)
+    temp_in_celsius = volt_to_celsius(voltage)
+    log(temp_in_celsius)
+    return temp_in_celsius
 #function to send alert to console probably
 def send_initial_alert(self, temp):
     log(temp)
     print("WARNING: Storage unit is 3 degrees away from reaching critical temperature!, dry ice refill is required!")
-
 
 #Send warning function
 def send_below_critical_alert(self, temp):
