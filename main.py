@@ -22,14 +22,14 @@ def initialize(self):
 
 
 #function to convert voltage to celsius
-def volt_to_celsius(self):
+def volt_to_celsius(self, vin):
 
 
-#function to read temp
+#function to read voltage uses volt to celsius function and returns temp in celsius
 def read_temp(self):
 
 
-#function to send alert
+#function to send alert to console probably
 def send_initial_alert(self):
 
 
