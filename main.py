@@ -30,8 +30,8 @@ def volt_to_celsius(vin):
 # function to read voltage uses volt to celsius function and returns temp in celsius
 def read_voltage():
     # supposed to mimic reading from resistance temp but we included voltage parameter to get a value
-    temp_in_celsius = volt_to_celsius(voltage[4])
-    return temp_in_celsius
+    v = voltage[4]
+    return v
 
 
 
@@ -86,9 +86,10 @@ def log(temp):
 
 def hourly_read():
     critical_temp = (-60, -80)
-    if initialize() != 0:
+    if initialize() >= 0:
         while True:
-            temp = read_voltage()
+            v = read_voltage()
+            temp = volt_to_celsius(v)
 
             if (critical_temp[0] >= temp >= critical_temp[0] - 3) or (
                     temp <= critical_temp[1] + 3 and temp <= critical_temp[1]):
@@ -103,4 +104,5 @@ def hourly_read():
 
 
 if __name__ == '__main__':
+    initialize()
     hourly_read()
