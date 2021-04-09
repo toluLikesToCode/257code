@@ -7,16 +7,8 @@ import time
 from datetime import datetime
 import csv
 
-voltage = ["0.3", "0.5", "0.7", "0.9", "2.1", "2.5", "3.0"]
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+voltage = ["0.3", "0.5", "0.7", "0.9", "2.1", "2.5", "2.2"]
 
-
-# Press the green button in the gutter to run the script.
-
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
 # function to initialize temp
 def initialize():
@@ -27,23 +19,25 @@ def initialize():
 
     return temp
 
+#tolu
 
 # function to convert voltage to celsius
-#tolu
 def volt_to_celsius(vin):
-    #return float(vin)
-    return -70
+    t = (((694.42) * ((2.7882 - float(vin)) / (6.2118 - float(vin)))) - 100) * (1 / 0.385)
+    return t
 
 
 # function to read voltage uses volt to celsius function and returns temp in celsius
 def read_voltage():
     # supposed to mimic reading from resistance temp but we included voltage parameter to get a value
-    temp_in_celsius = volt_to_celsius(voltage[1])
+    temp_in_celsius = volt_to_celsius(voltage[4])
     return temp_in_celsius
 
 
+
+# tolu
+
 # function to send alert to console probably
-#tolu
 def send_initial_alert(temp):
     log(temp)
     print("WARNING: Storage unit is close to reaching critical temperature!, dry ice refill is required!")
@@ -52,26 +46,29 @@ def send_initial_alert(temp):
 # function to read temp for an hour to check near critical temp
 def read_for_hour():
     alert_sent = False
-    t = time.time()
-    while t <= (t + 3600):
+    times = time.time()
+    t = times
+    while t <= (times + 3600):
         temp = read_voltage()
         if (-80 > temp > -60) and not alert_sent:
             send_below_critical_alert(temp)
             alert_sent = True
         else:
             log(temp)
-        time.sleep(5 * 60)
+        t = time.time()
+        time.sleep(60)
 
+
+# tolu
 
 # Send warning function
-#tolu
 def send_below_critical_alert(temp):
     log(temp)
     print("STORAGE UNIT IS BELOW CRITICAL TEMPERATURE! REFILL IS REQUIRED!")
 
+# tolu
 
 # Write down into log (txt) file
-#tolu
 def log(temp):
     f = open("data.csv", "a")
     now = datetime.now()
@@ -87,19 +84,23 @@ def log(temp):
     f.close()
 
 
-if __name__ == '__main__':
-    power = True
+def hourly_read():
     critical_temp = (-60, -80)
-    initialize()
-    while power:
-        temp = read_voltage()
+    if initialize() != 0:
+        while True:
+            temp = read_voltage()
 
-        if (critical_temp[0] >= temp >= critical_temp[0] - 3) or (temp <= critical_temp[1] + 3 and temp <= critical_temp[1]):
-            send_initial_alert(temp)
-            read_for_hour()
-        elif temp > critical_temp[0] or temp < critical_temp[1]:
-            send_below_critical_alert(temp)
-            read_for_hour()
-        else:
-            log(temp)
-        time.sleep(3600)
+            if (critical_temp[0] >= temp >= critical_temp[0] - 3) or (
+                    temp <= critical_temp[1] + 3 and temp <= critical_temp[1]):
+                send_initial_alert(temp)
+                read_for_hour()
+            elif temp > critical_temp[0] or temp < critical_temp[1]:
+                send_below_critical_alert(temp)
+                read_for_hour()
+            else:
+                log(temp)
+            time.sleep(3600)
+
+
+if __name__ == '__main__':
+    hourly_read()
