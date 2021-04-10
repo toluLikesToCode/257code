@@ -12,6 +12,11 @@ voltage = ["0.3", "0.5", "0.7", "0.9", "2.1", "2.5", "2.2"]
 
 # function to initialize temp
 def initialize():
+    """
+
+    :return:
+        v -
+    """
     v = read_voltage()
     if v < 0:
         v = 0
@@ -48,7 +53,8 @@ def read_for_hour():
     times = time.time()
     t = times
     while t <= (times + 3600):
-        temp = read_voltage()
+        v = read_voltage()
+        temp = volt_to_celsius(v)
         if (-80 > temp > -60) and not alert_sent:
             send_below_critical_alert(temp)
             alert_sent = True
