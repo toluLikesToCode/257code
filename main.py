@@ -7,15 +7,13 @@ import time
 from datetime import datetime
 import csv
 
-voltage = ["0.3", "0.5", "0.7", "0.9", "2.1", "2.5", "2.2"]
-
 
 # function to initialize temp
 def initialize():
     """
-
+    Initializes voltage reading to not return negative values
     :return:
-        v -
+        v - voltage read from Arduino or 0 to initialize voltage
     """
     v = read_voltage()
     if v < 0:
@@ -33,7 +31,13 @@ def volt_to_celsius(vin):
 
 # function to read voltage uses volt to celsius function and returns temp in celsius
 def read_voltage():
-    # supposed to mimic reading from resistance temp but we included voltage parameter to get a value
+    """
+    Mimics an arduino voltage reading, using an assigned voltage value from a list
+    that can be changed for testing.
+    :return:
+        v - voltage read from arduino
+    """
+    voltage = ["0.3", "0.5", "0.7", "0.9", "2.1", "2.5", "2.2"]
     v = voltage[4]
     return v
 
@@ -49,6 +53,11 @@ def send_initial_alert(temp):
 
 # function to read temp for an hour to check near critical temp
 def read_for_hour():
+    """
+    Function to read and log temperature every minute for an hour.
+    If temperature reaches below critical temperature a critical alert is
+    sent the first time, then not repeated. Uses time module to track time.
+    """
     alert_sent = False
     times = time.time()
     t = times
@@ -90,6 +99,14 @@ def log(temp):
 
 
 def hourly_read():
+    """
+    Function that reads and logs temperature every hour.
+    It makes the necessary checks to see if the sensor returns values
+    near critical temperature and sends initial alert, below critical
+    temperature alert, or simply logs the temperature. It is an infinite
+    loop that runs whenever program is on.
+    :return:
+    """
     critical_temp = (-60, -80)
     if initialize() >= 0:
         while True:
