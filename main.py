@@ -12,10 +12,9 @@ voltage = ["0.3", "0.5", "0.7", "0.9", "2.1", "2.5", "2.2"]
 
 # function to initialize temp
 def initialize():
-    if read_voltage() < 0:
+    v = read_voltage()
+    if v < 0:
         v = 0
-    else:
-        v = read_voltage()
 
     return v
 
