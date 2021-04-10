@@ -13,11 +13,11 @@ voltage = ["0.3", "0.5", "0.7", "0.9", "2.1", "2.5", "2.2"]
 # function to initialize temp
 def initialize():
     if read_voltage() < 0:
-        temp = 0
+        v = 0
     else:
-        temp = read_voltage()
+        v = read_voltage()
 
-    return temp
+    return v
 
 #tolu
 
@@ -104,5 +104,4 @@ def hourly_read():
 
 
 if __name__ == '__main__':
-    initialize()
     hourly_read()
