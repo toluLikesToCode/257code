@@ -10,56 +10,37 @@ import csv
 
 
 # function to initialize temp
-def initialize():
+def initialize(v):
     """
     Initializes voltage reading to not return negative values
     :return:
         v - voltage read from Arduino or 0 to initialize voltage
     """
-    v = float(read_voltage())
+    v = float(read_voltage(v))
     if v < 0:
         v = 0
 
     return v
 
-#tolu
+
+# tolu
 
 # function to convert voltage to celsius
 def volt_to_celsius(vin):
+    # from calculations in part 2
     t = (((694.42) * ((2.7882 - float(vin)) / (6.2118 - float(vin)))) - 100) * (1 / 0.385)
     return t
 
 
 # function to read voltage uses volt to celsius function and returns temp in celsius
-def read_voltage():
+def read_voltage(v):
     """
     Mimics an arduino voltage reading, using an assigned voltage value from a list
     that can be changed for testing.
     :return:
         v - voltage read from arduino
     """
-    voltage = ["-0.3", "2.4", "2.365", "2.3", "2.415", "2.408"]
-    #negative value of voltage
-    #v = voltage[0]
-
-    #within ideal temp ~ -76 C
-    #v = voltage[1]
-
-    #within -60 C and -63 C should send intial alert
-    #v = voltage[2]
-
-    # ~ -34 C should send below critical alert
-    #v = voltage[3]
-
-    #below critical ~ -82 C should send below critical
-    #v = voltage[4]
-
-    #near critical ~79 C should send initial alert
-    #v = voltage[5]
-
-    v = voltage[4]
     return v
-
 
 
 # tolu
@@ -71,7 +52,7 @@ def send_initial_alert(temp):
 
 
 # function to read temp for an hour to check near critical temp
-def read_for_hour():
+def read_for_hour(v):
     """
     Function to read and log temperature every minute for an hour.
     If temperature reaches below critical temperature a critical alert is
@@ -81,7 +62,7 @@ def read_for_hour():
     times = time.time()
     t = times
     while t <= (times + 3600):
-        v = read_voltage()
+        v = read_voltage(v)
         temp = volt_to_celsius(v)
         if (-80 > temp > -60) and not alert_sent:
             send_below_critical_alert(temp)
@@ -99,25 +80,28 @@ def send_below_critical_alert(temp):
     log(temp)
     print("STORAGE UNIT IS BELOW CRITICAL TEMPERATURE! REFILL IS REQUIRED!")
 
+
 # tolu
 
 # Write down into log (txt) file
 def log(temp):
-    f = open("data.csv", "a")
-    now = datetime.now()
-    is_critical = "N"
+    f = open("data.csv", "a")  # opens the csv file
+    now = datetime.now()  # gets the current date and time
 
+    # determines if current temp is critical or not
+    is_critical = "N"
     if temp >= -60 or temp <= -80:
         is_critical = "Y"
 
-    # dd/mm/YY H:M:S
+    # returns a string of the date and time in this format: dd/mm/YY H:M:S
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
+    # writes data to csv file
     f.write(f'{dt_string} ,{temp},{is_critical}\n')
     f.close()
 
 
-def hourly_read():
+def hourly_read(v):
     """
     Function that reads and logs temperature every hour.
     It makes the necessary checks to see if the sensor returns values
@@ -127,22 +111,61 @@ def hourly_read():
 
     """
     critical_temp = (-60, -80)
-    if initialize() >= 0:
+    if initialize(v) >= 0:
         while True:
-            v = read_voltage()
+            v = read_voltage(v)
             temp = volt_to_celsius(v)
 
             if (critical_temp[0] >= temp >= critical_temp[0] - 3) or (
                     temp <= critical_temp[1] + 3 and temp <= critical_temp[1]):
                 send_initial_alert(temp)
-                read_for_hour()
+                break  # for testing, to go to next voltage value
+                # read_for_hour(v) #function not called for testing
             elif temp > critical_temp[0] or temp < critical_temp[1]:
                 send_below_critical_alert(temp)
-                read_for_hour()
+                break  # for testing, to go to next voltage value
+                # read_for_hour(v)
             else:
                 log(temp)
-            time.sleep(3600)
+                print("Temps are good")  # for testing
+            # time.sleep(3600)
+            time.sleep(5)  # sleep time reduced for testing
+            break  # for testing, to go to next voltage value
+
+
+def test():
+    """
+    Function that tests different voltage values from a list of values
+    to test difference scenarios. For this to work the sleep times were
+    commented out and the "read_for_hour(v)" function is commented out
+    also to save on time.
+
+
+    """
+    # negative value of voltage
+    # v = voltage[0]
+
+    # within ideal temp ~ -76 C
+    # v = voltage[1]
+
+    # within -60 C and -63 C should send intial alert
+    # v = voltage[2]
+
+    # ~ -34 C should send below critical alert
+    # v = voltage[3]
+
+    # below critical ~ -82 C should send below critical
+    # v = voltage[4]
+
+    # near critical ~79 C should send initial alert
+    # v = voltage[5]
+
+    voltage = ["-0.3", "2.4", "2.365", "2.3", "2.415", "2.408"]
+
+    for x in voltage:
+        print(f"\nCurrent V is: {x}")
+        hourly_read(float(x))
 
 
 if __name__ == '__main__':
-    hourly_read()
+    test()
