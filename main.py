@@ -117,7 +117,7 @@ def hourly_read(v):
             temp = volt_to_celsius(v)
 
             if (critical_temp[0] >= temp >= critical_temp[0] - 3) or (
-                    temp <= critical_temp[1] + 3 and temp <= critical_temp[1]):
+                    temp <= critical_temp[1] + 3 and temp >= critical_temp[1]):
                 send_initial_alert(temp)
                 break  # for testing, to go to next voltage value
                 # read_for_hour(v) #function not called for testing
@@ -157,7 +157,7 @@ def test():
     # below critical ~ -82 C should send below critical
     # v = voltage[4]
 
-    # near critical ~79 C should send initial alert
+    # near critical ~ -79 C should send initial alert
     # v = voltage[5]
 
     voltage = ["-0.3", "2.4", "2.365", "2.3", "2.415", "2.408"]
@@ -165,7 +165,6 @@ def test():
     for x in voltage:
         print(f"\nCurrent V is: {x}")
         hourly_read(float(x))
-
 
 if __name__ == '__main__':
     test()
