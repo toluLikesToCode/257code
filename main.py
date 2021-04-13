@@ -8,6 +8,7 @@ from datetime import datetime
 import csv
 
 
+
 # function to initialize temp
 def initialize():
     """
@@ -15,7 +16,7 @@ def initialize():
     :return:
         v - voltage read from Arduino or 0 to initialize voltage
     """
-    v = read_voltage()
+    v = float(read_voltage())
     if v < 0:
         v = 0
 
@@ -37,7 +38,25 @@ def read_voltage():
     :return:
         v - voltage read from arduino
     """
-    voltage = ["0.3", "0.5", "0.7", "0.9", "2.1", "2.5", "2.2"]
+    voltage = ["-0.3", "2.4", "2.365", "2.3", "2.415", "2.408"]
+    #negative value of voltage
+    #v = voltage[0]
+
+    #within ideal temp ~ -76 C
+    #v = voltage[1]
+
+    #within -60 C and -63 C should send intial alert
+    #v = voltage[2]
+
+    # ~ -34 C should send below critical alert
+    #v = voltage[3]
+
+    #below critical ~ -82 C should send below critical
+    #v = voltage[4]
+
+    #near critical ~79 C should send initial alert
+    #v = voltage[5]
+
     v = voltage[4]
     return v
 
@@ -105,7 +124,7 @@ def hourly_read():
     near critical temperature and sends initial alert, below critical
     temperature alert, or simply logs the temperature. It is an infinite
     loop that runs whenever program is on.
-    :return:
+
     """
     critical_temp = (-60, -80)
     if initialize() >= 0:
