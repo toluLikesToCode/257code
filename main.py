@@ -88,16 +88,11 @@ def log(temp):
     f = open("data.csv", "a")  # opens the csv file
     now = datetime.now()  # gets the current date and time
 
-    # determines if current temp is critical or not
-    is_critical = "N"
-    if temp >= -60 or temp <= -80:
-        is_critical = "Y"
-
     # returns a string of the date and time in this format: dd/mm/YY H:M:S
     dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
     # writes data to csv file
-    f.write(f'{dt_string} ,{temp},{is_critical}\n')
+    f.write(f'{dt_string} ,{temp}\n')
     f.close()
 
 
